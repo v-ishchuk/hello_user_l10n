@@ -1,0 +1,5 @@
+arb-dir: res
+template-arb-file: strings_en.arb
+output-localization-file: l10n.dart
+output-class: L10n
+nullable-getter: false
