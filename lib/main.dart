@@ -48,7 +48,7 @@ class _RootPageState extends State<_RootPage> {
     final controller = widget.localeController;
 
     return MaterialApp(
-      locale: controller.supportedLanguage.languageLocale,
+      locale: controller.selectedLanguage.languageLocale,
       localizationsDelegates: L10n.localizationsDelegates,
       supportedLocales: L10n.supportedLocales,
       theme: ThemeData(
@@ -56,7 +56,8 @@ class _RootPageState extends State<_RootPage> {
         useMaterial3: true,
       ),
       home: _GreetingsPageContent(
-        supportedLanguage: controller.supportedLanguage,
+        selectedLanguage: controller.selectedLanguage,
+        supportedLanguages: controller.supportedLanguages,
         onLanguageChanged: controller.changeAppLanguage,
       ),
     );
@@ -65,11 +66,13 @@ class _RootPageState extends State<_RootPage> {
 
 class _GreetingsPageContent extends StatelessWidget {
   const _GreetingsPageContent({
-    required this.supportedLanguage,
+    required this.selectedLanguage,
+    required this.supportedLanguages,
     required this.onLanguageChanged,
   });
 
-  final SupportedLanguage supportedLanguage;
+  final SupportedLanguage selectedLanguage;
+  final Set<SupportedLanguage> supportedLanguages;
   final ValueChanged<SupportedLanguage?>? onLanguageChanged;
 
   @override
@@ -84,12 +87,8 @@ class _GreetingsPageContent extends StatelessWidget {
             Text(l10n.mainPage_greetings),
             const SizedBox(height: 24),
             DropdownButton(
-              value: supportedLanguage,
-              items: L10n.supportedLocales.map((locale) {
-                final language =
-                    SupportedLanguage.fromCode(locale.languageCode) ??
-                        SupportedLanguage.english;
-
+              value: selectedLanguage,
+              items: supportedLanguages.map((language) {
                 return DropdownMenuItem(
                   value: language,
                   child: Text(language.localizedName),

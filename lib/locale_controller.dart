@@ -9,24 +9,27 @@ class LocaleController extends ChangeNotifier {
 
   final UserPreferencesRepository _userPreferencesRepository;
 
-  SupportedLanguage _supportedLanguage = SupportedLanguage.english;
+  SupportedLanguage _selectedLanguage = SupportedLanguage.english;
 
-  SupportedLanguage get supportedLanguage => _supportedLanguage;
+  SupportedLanguage get selectedLanguage => _selectedLanguage;
+
+  Set<SupportedLanguage> get supportedLanguages =>
+      SupportedLanguage.values.toSet();
 
   Future<void> init() async {
-    _supportedLanguage = await _userPreferencesRepository.readUserLanguage();
+    _selectedLanguage = await _userPreferencesRepository.readUserLanguage();
 
     notifyListeners();
   }
 
   Future<void> changeAppLanguage(SupportedLanguage? language) async {
-    if (language == null || language == _supportedLanguage) {
+    if (language == null || language == _selectedLanguage) {
       return;
     }
 
     await _userPreferencesRepository.storeUserLanguage(language);
 
-    _supportedLanguage = language;
+    _selectedLanguage = language;
 
     notifyListeners();
   }
